@@ -32,11 +32,11 @@ fun main() {
             // 异常 http code
             status(*HttpStatusCode.allStatusCodes.filter { httpStatusCode -> !httpStatusCode.isSuccess() }
                 .toTypedArray()) { call, status ->
-                call.respond(status, Resp.fail(status.description))
+                call.respond(status, Resp.Fail(status.description))
             }
             // 异常处理
             exception<Throwable> { call, cause ->
-                call.respond(Resp.fail(cause.message))
+                call.respond(Resp.Fail(cause.message))
             }
         }
         routing {
