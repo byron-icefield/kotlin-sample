@@ -9,7 +9,6 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.*
 
 /**
  * created by byron at 2023/10/20
@@ -20,7 +19,6 @@ fun main() {
 
         // 拦截器
         intercept(ApplicationCallPipeline.Call) {
-            context.attributes[AttributeKey("1243")]
             proceed()
         }
 
@@ -32,19 +30,32 @@ fun main() {
             // 异常 http code
             status(*HttpStatusCode.allStatusCodes.filter { httpStatusCode -> !httpStatusCode.isSuccess() }
                 .toTypedArray()) { call, status ->
-                call.respond(status, Resp.Fail(status.description))
+                call.respond(status, Resp.fail(status.description))
             }
             // 异常处理
             exception<Throwable> { call, cause ->
-                call.respond(Resp.Fail(cause.message))
+                call.respond(Resp.fail(cause.message ?: "error"))
             }
         }
         routing {
             get("/") {
-                call.respondText("root")
+                call.respond(Resp.success("ROOT"))
             }
-            get("/test") {
-                call.respondText("OK!")
+            get("/file/list") {
+                call.respond(
+                    Resp.success(
+                        ExcelParser.list()
+                    )
+                )
+            }
+            get("/file") {
+                call.respond(
+                    Resp.success(
+                        ExcelParser.parse(
+                            fileName = call.parameters["fileName"]!!
+                        )
+                    )
+                )
             }
         }
     }.start(wait = true)

@@ -31,6 +31,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation")
     implementation("io.ktor:ktor-serialization-kotlinx-json")
     implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+    implementation("com.alibaba:easyexcel:3.3.2")
 //    implementation("org.springframework.boot:spring-boot-starter-web")
 //    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
@@ -39,6 +41,10 @@ dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
+}
+
+application {
+    mainClass.set("com.example.ServerKt")
 }
 
 tasks.withType<KotlinCompile> {
